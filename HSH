@@ -1,0 +1,18 @@
+
+명령의 10 행에서 시작하는 중 오류 발생 -
+CREATE TABLE MYCLASS ( 
+번호  NUMBER(5)    NOT NULL,
+이름  VARCHAR2(50) NOT NULL,
+전화  VARCHAR2(13),
+메일  VARCHAR2(70),
+가입일 DATE
+)
+오류 보고 -
+ORA-00955: 기존의 객체가 이름을 사용하고 있습니다.
+
+https://docs.oracle.com/error-help/db/ora-00955/00955. 00000 -  "name is already used by an existing object"
+*Cause:    An attempt was made to create a database object (such
+           as a table, view, cluster, index, or synonym) that already
+           existed. A user's database objects must have distinct names.
+*Action:   Enter a unique name for the database object or modify
+           or drop the existing object so it can be reused.

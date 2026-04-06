@@ -46,3 +46,12 @@ SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, SALARY
         , FIRST_NAME||' '||LAST_NAME   ENAME
   FROM EMPLOYEES
   WHERE DEPARTMENT_ID IS NULL;      -- = NULL : 작동안함, IS NULL : 작동함, IS NOT NULL : 
+  
+  
+  
+  
+  
+  
+  
+  
+  
