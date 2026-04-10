@@ -497,11 +497,7 @@ SELECT EMPLOYEE_ID, FIRST_NAME FROM EMPLOYEES
 UNION
 SELECT DEPARTMENT_ID, DEPARTMENT_NAME FROM DEPARTMENTS;
 
--- 직원정보, 담당 업무
 
--- 직원명, 담당업무, 담당업무 히스토리
-
--- 사번, 업무시작일, 업무 종료일, 담당업무, 부서번호
 
 
 
