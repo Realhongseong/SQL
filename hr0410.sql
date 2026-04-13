@@ -1,7 +1,7 @@
 -- 함수
 -- 숫자함수
-    1.ABS()
-    2.CEIL(n), FLOOR(n) -> 정수형
+    -- 1.ABS()
+    -- 2.CEIL(n), FLOOR(n) -> 정수형
 -- CEIL : 천장(무조건 올림)
 -- FLOOR : 바닥(버림)
 
@@ -14,7 +14,7 @@
     SELECT TRUNC(-10.123), TRUNC(-10.541), TRUNC(-11.001) FROM DUAL; -- -10 -10 -11
         -- 소수이하 버림
         
- -- ROUND(n, i)와 TRUNC(n1, n2)
+ -- 3. ROUND(n, i)와 TRUNC(n1, n2)
     SELECT ROUND(10.154, 1), ROUND(10.154, 2), ROUND(10.154, 3) FROM DUAL; -- 10.2	10.15	10.154
     
     SELECT ROUND(0, 3), ROUND(115.155, -1), ROUND(115.155, -2)  FROM DUAL; -- 0	120	100
@@ -23,7 +23,7 @@
     
     SELECT TRUNC(0, 3), TRUNC(115.155, -1), TRUNC(115.155, -2)  FROM DUAL; -- 0	110	100
 
- -- POWER(2,3) : 제곱승 - 2의 3승
+ -- 4. POWER(2,3) : 제곱승 - 2의 3승
  -- SQRT(n)    : 제곱근 - SQUARE ROOT
 
     SELECT POWER(3, 2), POWER(3, 3), POWER(3, 3.0001), POWER(4, 0.5) FROM DUAL;
@@ -32,41 +32,177 @@
     
     SELECT SQRT(2), SQRT(-4) FROM DUAL;
     
-    -- MOD(n2, n1)와 REMAINDER(n2, n1)
+ -- 5. 나머지 MOD(n2, n1)와 REMAINDER(n2, n1) MOD -> n2 - n1 * FLOOR(n2/n1)
+ -- REMAINDER -> n2-n1 * ROUND (n2/n1)
 
     SELECT MOD(19,4), MOD(19.123, 4.2)  FROM DUAL; -- 3	2.323
     
     SELECT REMAINDER(19,4), REMAINDER(19.123, 4.2) FROM DUAL; -- -1	-1.877
     
-    -- EXP(n), LN(n) 그리고 LOG(n2, n1)
+ -- 6. EXP(n), LN(n) 그리고 LOG(n2, n1)
     SELECT EXP(2), LN(2.713), LOG(10, 100) FROM DUAL;
+    
+ -- 7. SIN(), SOC(), TAN() : DEGREE(도) -> RADIAN (월주율/180*각도) -> 0.01745
+ SIN 30도 -> 0.5
+ SELECT SIN(30), SIN(30*0.01745) FROM DUAL;
+ 
+ -- 문자함수
+ 1. INITCAP(char), LOWER(char), UPPER(char)
+ SELECT LOWER ('NEVER SAU GOODBYE'), UPPER('never6say*good가bye') FROM UDAL;
+ 
+ SELECT LOWER ('NEVER SAU GOODBYE'), UPPER('never6say*good가bye') FROM UDAL;
+ 
+ 2. CONCAT(char1,char2), SUBSTR(char, pos, len), SUBSTRB(char, pos, len)
+ 
+ SELECT CONCAT('I Have', 'A Dream'), 'I Have'||'A Dream' FROM DUAL;
+ SELECT SUBSTR('ABCDEFG', 1,4), SUBSTR('ABCDEFG', -3,4) FROM DUAL;
+ -- ABCD EFG
+ -- SUBSTR('ABCDEFG', -1, 4) : -1  뒤로부터 첫번째 에서 4개 앞으로 진행 : 'g'
 
--- 직원정보, 담당 업무
+3. LTRIM(char, set), RTRIM(char, set)
+  SELECT LTRIM('ABCDEFGABC','ABC'),
+         LTRIM('가나다라','가'),
+         RTRIM('ABCDEFGABC','ABC'),
+         RTRIM('가나다라','라'),
+         TRIM('ABCDEF'),
+         LENGTH(TRIM('ABCDEF')),
+         TRIM(LEADING'FROM''ABCDEF'),
+         LENGTH(LEADING'FROM''ABCDEF')
+  FROM DUAL;
+  -- DEFGABC 나다라 ABCDEFG 가나다
+
+SELECT SUBSTRB('ABCDEFG', 1, 4), SUBSTRB('가나다라마바사', 1,4) FROM DUAL;
+
+-----------------------------------------------------------------
+4. LPAD(expr1, n, expr2), RPAD(expr1, n, expr2)
+
+CREATE TABLE ex4_1(
+    phone_num VARCHAR2(30)
+);
+
+INSERT INTO ex4_1 VALUES ('111-1111');
+INSERT INTO ex4_1 VALUES ('111-2222');
+INSERT INTO ex4_1 VALUES ('111-3333');
+
+SELECT * FROM ex4_1;
+
+SELECT LPAD(phone_num, 12, '(02)')
+FROM ex4_1;
+
+SELECT RPAD(phone_num, 12, '(02)')
+FROM ex4_1;
+
+5. REPLACE(char, search_str, replace_str), TRANSLATE(expr, FROM_str, to_str)
+
+SELECT REPLACE ('나는 너를 모르는데 너는 나를 알겠는가?', '나','너')
+FROM DUAL;
+
+SELECT LTRIM(' ABC DEF '),
+           RTRIM(' ABC DEF '),
+           REPLACE(' ABC DEF ', ' ', '')
+FROM DUAL;  
+      
+SELECT employee_id, 
+     TRANSLATE(EMP_NAME,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','thehillsarealivewiththesou') AS TRANS_NAME
+FROM employees;
+
+6. INSTR(str, substr, pos, occur), --indexOf()
+   LENGTH(chr)  --글자수
+   LENGTHB(chr)  --바이트수
+   
+   SELECT INSTR('내가 만약 외로울 때면, 내가 만약 괴로울 때면, 내가 만약 즐거울 때면','만약') AS INSTSR1,
+          INSTR('내가 만약 외로울 때면, 내가 만약 괴로울 때면, 내가 만약 즐거울 때면','만약', 5) AS INSTSR2,
+          INSTR('내가 만약 외로울 때면, 내가 만약 괴로울 때면, 내가 만약 즐거울 때면','만약', 5, 2) AS INSTSR3
+   FROM DUAL; 
+
+   SELECT LENGTH('대한민국'), -- 4자
+          LENGTH('대한민국')  -- 12바이트
+   FROM DUAL;
+
+-- 날짜함수
+1. SYSDATE, SYSTIMESTAMP
+2. ADD_MONTHS(date, integer)
+3. MONTHS_BETWEEN(date1, date2)
+4. LAST_DAT(date)
+5. ROUND(date, format), TRUNC(date, format)
+   SELECT SUSDATE, ROUND(SYSDATEM 'month'), TRUNC(SYSDATE, 'month')
+   FROM DUAL;
+6. NEXT_DAY(date, char)
+
+-- 변환함수
+-- https://thebook.io/006696/0110/
+1. TO_CHAR (숫자 혹은 날짜, format)
+  
+    SELECT TO_CHAR(123456789, '999,999,999'),
+           TO_CHAR(1234567,   '99,999,999'),
+           TO_CHAR(1234567,   '00,000,000'),
+           TO_CHAR(123.45678, '99,990.000'),    -- 소수이하자동반올림 3자리로
+           TO_CHAR(123456789, '$999,999,999'),
+           TO_CHAR(123456789, 'L999,999,999')
+      FROM DUAL;
+      --  123,456,789	 $123,456,789	        ￦123,456,789
+  
+    SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+    FROM DUAL;
+    
+2.  TO_NUMBER(expr, format)  
+    
+3.  TO_DATE(char, format), TO_TIMESTAMP(char, format) 
+    
+4. GREATEST(expr1, expr2, …), LEAST(expr1, expr2, …)
+    SELECT GREATEST(1, 2, 3, 2),  -- 3
+           LEAST(1, 2, 3, 2)      -- 1
+      FROM DUAL;
+    
+5. DECODE (expr, search1, result1, search2, result2, …, default)  
+
+
+-- 직원이름, 담당업무
+  SELECT   FIRST_NAME || ' ' || LAST_NAME   직원이름, 
+           JOB_ID                           담당업무           
+   FROM    EMPLOYEES ;
 
 
 
--- 직원명, 담당업무, 담당업무 히스토리
+-- 직원번호, 담당업무, 담당업무 히스토리
+  SELECT   EMPLOYEE_ID, JOB_ID  
+   FROM    EMPLOYEES
+  UNION  
+  SELECT   EMPLOYEE_ID, JOB_ID  
+   FROM    JOB_HISTORY;
+  
+  SELECT  *
+   FROM   (
+        SELECT   EMPLOYEE_ID, JOB_ID  
+         FROM    EMPLOYEES
+       UNION  
+       SELECT   EMPLOYEE_ID, JOB_ID  
+         FROM    JOB_HISTORY
+   )   -- INLINE VIEW : ORDER BY 사용할 수 있어요 : FORM 뒤에 사용
+   ORDER  BY   EMPLOYEE_ID ASC; 
+
+
 
 -- 사번, 업무시작일, 업무 종료일, 담당업무, 부서번호
 
-SELECT * 
+SELECT 사번, 업무시작일, 업무종료일, 담당업무, 부서번호
 FROM
 (
-SELECT  EMPLOYEE_ID,
-        TO_CHAR(HIRE_DATE, 'YYYY-MM-DD'),
-        '재직중',
-        JOB_ID,
-        DEPARTMENT_ID
+SELECT  EMPLOYEE_ID         사번,
+        TO_CHAR(HIRE_DATE, 'YYYY-MM-DD')    업무시작일,
+        '재직중'   업무종료일,
+        JOB_ID  담당업무,
+        DEPARTMENT_ID   부서번호
 FROM    EMPLOYEES
 UNION
-SELECT  EMPLOYEE_ID,
-        TO_CHAR(START_DATE, 'YYYY-MM-DD'),
-        TO_CHAR(END_DATE, 'YYYY-MM-DD'),
-        JOB_ID,
-        DEPARTMENT_ID
+SELECT  EMPLOYEE_ID     사번,
+        TO_CHAR(START_DATE, 'YYYY-MM-DD')   업무시작일,
+        TO_CHAR(END_DATE, 'YYYY-MM-DD')     업무종료일,
+        JOB_ID  담당업무,
+        DEPARTMENT_ID   부서번호
 FROM JOB_HISTORY
 )
-ORDER BY DEPARTMENT_ID, 업무시작일
+ORDER BY 사번 ASC, 업무시작일 ASC
 ;
 
 -- 사번, 직원명, 업무시작일, 업무종료일, 담당업무명, 부서이름
