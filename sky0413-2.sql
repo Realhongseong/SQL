@@ -21,6 +21,12 @@
   4. CHECK           : 값의 범위지정 , DOMAIN 제약 조건 
   5. FOREIGN KEY     : 외래키 제약조건
   
+ -- 관계가 설정된 테이블 삭제방법1
+ 
+  
+  
+  
+  
   학생     : 학번(PK), 이름,   전화,   입학일
  STUDENT    STID      STNAME  PHONE   INDATE  
  
@@ -221,10 +227,73 @@ select * from student;
  ;
  
  -- 모든 학생의 학번, 이름, 총점, 평균 
+ SELECT ST.STID        학번,
+        ST.STNAME      이름,
+        SUM(SC.SCORE)  총점, 
+        ROUND(AVG(SC.SCORE),2)  평균 
+ FROM  STUDENT ST LEFT OUTER JOIN SCORES SC
+ ON    ST.STID = SC.STID
+ GROUP BY ST.STID, ST.STNAME
+ ORDER BY ST.STID ASC, ST.STNAME ASC;
+ 
+ 
  -- 점수가 NULL인 학생은 '미응시'
  
+ SELECT ST.STID        학번,
+        ST.STNAME      이름,
+        DECODE(SUM(SC.SCORE),NULL,'미응시', SUM(SC.SCORE)) 총점,
+        CASE   
+            WHEN ROUND(AVG(SC.SCORE),2) IS NULL THEN '미응시'
+            ELSE TO_CHAR(AVG(SC.SCORE),'999.00')    
+            END     평균
+ FROM  STUDENT ST, SCORES SC
+ WHERE    ST.STID = SC.STID(+)
+ GROUP BY ST.STID, ST.STNAME
+ ORDER BY ST.STID ASC, ST.STNAME ASC;
+ 
+ 
+   SELECT  학번, 이름, 
+           DECODE(총점, NULL, '미응시', TO_CHAR(총점, '990')),
+           DECODE(평균, NULL, '미응시', TO_CHAR(평균, '990.00'))
+    FROM
+   (
+     SELECT     ST.STID                   학번, 
+                ST.STNAME                 이름, 
+                SUM(SC.SCORE)             총점, 
+                ROUND(AVG(SC.SCORE), 2)   평균
+     FROM       STUDENT  ST LEFT OUTER JOIN SCORES SC
+        ON      ST.STID  =  SC.STID
+     GROUP BY   ST.STID,  ST.STNAME
+     ORDER BY   ST.STID ASC,  ST.STNAME ASC 
+   );
+ 
  -- 모든 학생의 학번, 이름, 총점, 평균, 등급, 석차
-
+ -- 점수가 NULL 인 학생은 미응시
+ 
+ SELECT ST.STID   학번,
+        ST.STNAME 이름,
+        CASE 
+            WHEN SUM(SC.SCORE) IS NULL THEN '미응시'
+            ELSE TO_CHAR(SUM(SC.SCORE),'990')
+        END 총점, 
+        CASE 
+            WHEN AVG(SC.SCORE) IS NULL THEN '미응시'
+            ELSE TO_CHAR(AVG(SC.SCORE),'990')
+        END 평균,
+        CASE 
+            WHEN ROUND(AVG(SC.SCORE),'2') BETWEEN 90 AND 100   THEN 'A'
+            WHEN ROUND(AVG(SC.SCORE),'2') BETWEEN 80 AND 89.99 THEN 'B'
+            WHEN ROUND(AVG(SC.SCORE),'2') BETWEEN 70 AND 79.99 THEN 'C'
+            WHEN ROUND(AVG(SC.SCORE),'2') BETWEEN 60 AND 69.99 THEN 'D'
+            ELSE 'F'
+        END 등급,
+        RANK() OVER(ORDER BY SUM(SC.SCORE)DESC NULLS LAST) 석차
+ FROM   STUDENT ST
+     LEFT JOIN SCORES SC
+     ON ST.STID = SC.STID
+ GROUP BY ST.STID, ST.STNAME
+ ORDER BY ST.STID;
+ 
  -- 학번, 이름, 국어, 영어, 수학, 총점, 평균, 등급, 석차
   
   
